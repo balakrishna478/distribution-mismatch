@@ -1,25 +1,24 @@
 # Off-policy TD exact verification scripts
 
-This folder contains two complementary verification scripts for the two-state off-policy TD(0) example.
+This repository provides reproducibility checks for the two-state off-policy linear TD(0) example.
 
 ## Requirements
 
 - Python 3.9 or newer
-- `sympy`
-- `numpy` (needed by `verify_offpolicy_td.py` for its numerical eigenvalue and finite-horizon checks)
+- Dependencies listed in [requirements.txt](requirements.txt)
 
-Install dependencies:
+Install dependencies from the repository root:
 
 ```bash
-python -m pip install sympy numpy
+python -m pip install -r requirements.txt
 ```
 
 ## Exact six-dimensional symmetric covariance certificate
 
-Run:
+Run from the repository root:
 
 ```bash
-python verify_symmetric_covariance.py
+python code/verify_symmetric_covariance.py
 ```
 
 This script constructs the covariance recursion directly on symmetric 2-by-2 blocks, using the coordinate order
@@ -46,9 +45,13 @@ It uses exact rational arithmetic to verify:
 Run:
 
 ```bash
-python verify_offpolicy_td.py
+python code/verify_offpolicy_td.py
 ```
 
 This retains the full-vectorization determinant check, boundary fixed-point check, characteristic polynomial/eigenvalue output, and finite-horizon peak calculations. The eight-dimensional determinant is not the determinant used in the six-dimensional symmetric-covariance stability theorem; use `verify_symmetric_covariance.py` for that certificate.
 
 All calculations in `verify_symmetric_covariance.py` are exact. The finite-horizon peak calculations in `verify_offpolicy_td.py` are floating-point numerical observations and are not global-maximum certificates.
+
+## Automated verification
+
+GitHub Actions runs both scripts on pushes and pull requests. The workflow checks that the exact algebraic assertions and numerical routines execute successfully; it does not convert finite-horizon peak observations into global-maximum certificates.
