@@ -1,0 +1,23 @@
+name: Reproducibility checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Verify exact symmetric covariance certificate
+        run: python code/verify_symmetric_covariance.py
+      - name: Verify full Markovian covariance lift
+        run: python code/verify_offpolicy_td.py
