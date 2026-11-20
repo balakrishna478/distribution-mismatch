@@ -21,3 +21,5 @@ jobs:
         run: python code/verify_symmetric_covariance.py
       - name: Verify full Markovian covariance lift
         run: python code/verify_offpolicy_td.py
+      - name: Certify all ten Table 1 global peaks
+        run: bash code/certify_table1.sh
