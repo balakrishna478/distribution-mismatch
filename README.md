@@ -1,6 +1,6 @@
 # Off-policy TD exact verification scripts
 
-This repository provides reproducibility checks for the two-state off-policy linear TD(0) example.
+This repository provides reproducibility checks and exact peak certificates for the two-state off-policy linear TD(0) example.
 
 ## Requirements
 
@@ -50,8 +50,30 @@ python code/verify_offpolicy_td.py
 
 This retains the full-vectorization determinant check, boundary fixed-point check, characteristic polynomial/eigenvalue output, and finite-horizon peak calculations. The eight-dimensional determinant is not the determinant used in the six-dimensional symmetric-covariance stability theorem; use `verify_symmetric_covariance.py` for that certificate.
 
-All calculations in `verify_symmetric_covariance.py` are exact. The finite-horizon peak calculations in `verify_offpolicy_td.py` are floating-point numerical observations and are not global-maximum certificates.
+The finite-horizon peak calculations in `verify_offpolicy_td.py` are floating-point exploratory output; they are not the global-maximum proof. The proof is implemented separately below.
+
+## Exact global-maximum certificates for Table 1
+
+Run from the repository root:
+
+```bash
+bash code/certify_table1.sh
+```
+
+This runs `code/rigorous_peak.py`. For each of the ten step sizes in Table 1, it:
+
+1. Builds the six-dimensional Markovian covariance operator using exact rational arithmetic.
+2. Uses exact discrete-Lyapunov solutions to bound the error of fixed-point integer recursions.
+3. Checks every iterate from zero through a finite cutoff, proving that none exceeds the tabulated peak.
+4. Verifies a positive-semidefinite block certificate for the adjoint covariance recursion at that cutoff. Cone preservation then proves that the objective is nonincreasing for every later iteration.
+5. Checks that the resulting rigorous interval rounds to the reported six-decimal peak.
+
+The script writes `code/peak_certificates.json`, containing the verified peak intervals, finite-prefix gaps, and cone margins. The certification uses exact integer/rational arithmetic; the initial eigenvector is handled exactly in its quadratic number field. A successful run ends with `PASS: all ten Table 1 entries are certified exact global maxima.`
+
+## Figures
+
+The manuscript source package supplies the figure assets as static files. Figure-generation scripts are not included in this repository.
 
 ## Automated verification
 
-GitHub Actions runs both scripts on pushes and pull requests. The workflow checks that the exact algebraic assertions and numerical routines execute successfully; it does not convert finite-horizon peak observations into global-maximum certificates.
+GitHub Actions runs the two algebraic verification scripts and the Table 1 global-maximum certification on pushes and pull requests.
