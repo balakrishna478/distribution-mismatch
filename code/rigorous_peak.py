@@ -256,7 +256,7 @@ def main():
         results.append(result)
         print(f"PASS eta={eta}: peak at k={kp}, exact prefix checked through k={K0}; "
               f"monotone thereafter; peak interval rounds to {peak}.")
-        print("  finite-prefix gap lower bound:", sp.N(peak_lower - max_other_upper, 12))
+        print("  finite-prefix gap lower bound (exact):", result["finite_prefix_gap_lower_exact"])
         print("  cone determinant lower bounds:", [m["determinant_lower"] for m in result["dual_cone_margins"]])
     Path(__file__).with_name("peak_certificates.json").write_text(json.dumps(results, indent=2) + "\n")
     print("PASS: all ten Table 1 entries are certified exact global maxima.")
