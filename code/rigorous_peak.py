@@ -233,18 +233,18 @@ def certify_one(eta_text: str, peak_k: int, K0: int, expected: str, x0: sp.Matri
         "eta": eta_text,
         "peak_iteration": peak_k,
         "monotonicity_from_iteration": K0,
-        "peak_interval": [str(sp.N(peak_lower, 40)), str(sp.N(peak_upper, 40))],
+        "peak_interval_exact": [str(peak_lower), str(peak_upper)],
         "peak_rounded": expected,
-        "finite_prefix_gap_lower": str(sp.N(peak_lower - max_other_upper, 30)),
+        "finite_prefix_gap_lower_exact": str(peak_lower - max_other_upper),
         "dual_cone_margins": [
-            {k: str(sp.N(sp.Rational(v), 25)) for k, v in item.items()}
+            {k + "_exact": str(sp.Rational(v)) for k, v in item.items()}
             for item in cone_margins
         ],
-        "state_lyapunov_trace": str(sp.N(trace_M, 25)),
-        "dual_lyapunov_trace": str(sp.N(trace_A, 25)),
-        "state_error_bound": str(sp.N(err_state, 12)),
-        "dual_error_bound": str(sp.N(err_dual, 12)),
-        "dual_D_entry_error_bound": str(sp.N(err_D, 12)),
+        "state_lyapunov_trace_exact": str(trace_M),
+        "dual_lyapunov_trace_exact": str(trace_A),
+        "state_error_bound_exact": str(err_state),
+        "dual_error_bound_exact": str(err_dual),
+        "dual_D_entry_error_bound_exact": str(err_D),
     }
 
 
@@ -256,7 +256,7 @@ def main():
         results.append(result)
         print(f"PASS eta={eta}: peak at k={kp}, exact prefix checked through k={K0}; "
               f"monotone thereafter; peak interval rounds to {peak}.")
-        print("  finite-prefix gap lower bound:", result["finite_prefix_gap_lower"])
+        print("  finite-prefix gap lower bound:", sp.N(peak_lower - max_other_upper, 12))
         print("  cone determinant lower bounds:", [m["determinant_lower"] for m in result["dual_cone_margins"]])
     Path(__file__).with_name("peak_certificates.json").write_text(json.dumps(results, indent=2) + "\n")
     print("PASS: all ten Table 1 entries are certified exact global maxima.")
