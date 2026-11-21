@@ -68,7 +68,9 @@ This runs `code/rigorous_peak.py`. For each of the ten step sizes in Table 1, it
 4. Verifies a positive-semidefinite block certificate for the adjoint covariance recursion at that cutoff. Cone preservation then proves that the objective is nonincreasing for every later iteration.
 5. Checks that the resulting rigorous interval rounds to the reported six-decimal peak.
 
-The script writes `code/peak_certificates.json`, containing the verified peak intervals, finite-prefix gaps, and cone margins. The certification uses exact integer/rational arithmetic; the initial eigenvector is handled exactly in its quadratic number field. A successful run ends with `PASS: all ten Table 1 entries are certified exact global maxima.`
+The script writes `code/peak_certificates.json`. Its peak interval endpoints, finite-prefix gap, cone-margin bounds, Lyapunov traces, and rounding-error bounds are serialized as exact rational strings (numerator/denominator), not rounded decimal approximations. The certification uses exact integer/rational arithmetic; the initial eigenvector is handled exactly in its quadratic number field. A successful run ends with `PASS: all ten Table 1 entries are certified exact global maxima.`
+
+When run locally, the JSON report remains at `code/peak_certificates.json`. In GitHub Actions, the workflow uploads it as the artifact `table1-peak-certificates`; download that artifact from the corresponding workflow run to inspect the machine-readable certificate report.
 
 ## Figures
 
@@ -76,4 +78,4 @@ The manuscript source package supplies the figure assets as static files. Figure
 
 ## Automated verification
 
-GitHub Actions runs the two algebraic verification scripts and the Table 1 global-maximum certification on pushes and pull requests.
+GitHub Actions runs the two algebraic verification scripts and the Table 1 global-maximum certification on pushes and pull requests. The workflow fails if the JSON certificate report is not produced, and uploads that report as a workflow artifact.
