@@ -70,7 +70,7 @@ This runs `code/rigorous_peak.py`. For each of the ten step sizes in Table 1, it
 
 The script writes `code/peak_certificates.json`. Its peak interval endpoints, finite-prefix gap, cone-margin bounds, Lyapunov traces, and rounding-error bounds are serialized as exact rational strings (numerator/denominator), not rounded decimal approximations. The certification uses exact integer/rational arithmetic; the initial eigenvector is handled exactly in its quadratic number field. A successful run ends with `PASS: all ten Table 1 entries are certified exact global maxima.`
 
-When run locally, the JSON report remains at `code/peak_certificates.json`. In GitHub Actions, the workflow uploads it as the artifact `table1-peak-certificates`; download that artifact from the corresponding workflow run to inspect the machine-readable certificate report.
+On pushes to `main`, GitHub Actions commits the generated `code/peak_certificates.json` report to the repository, making the exact certificate data available alongside the source. Every workflow run also uploads the report as the `table1-peak-certificates` artifact. Pull-request runs upload the artifact but do not push generated files to the branch.
 
 ## Figures
 
@@ -78,4 +78,4 @@ The manuscript source package supplies the figure assets as static files. Figure
 
 ## Automated verification
 
-GitHub Actions runs the two algebraic verification scripts and the Table 1 global-maximum certification on pushes and pull requests. The workflow fails if the JSON certificate report is not produced, and uploads that report as a workflow artifact.
+GitHub Actions runs the two algebraic verification scripts and the Table 1 global-maximum certification on pushes and pull requests. The workflow fails if the JSON certificate report is not produced. On pushes to `main`, it commits the report and also uploads it as a workflow artifact.
