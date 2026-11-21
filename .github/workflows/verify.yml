@@ -23,3 +23,9 @@ jobs:
         run: python code/verify_offpolicy_td.py
       - name: Certify all ten Table 1 global peaks
         run: bash code/certify_table1.sh
+      - name: Upload peak certificate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: table1-peak-certificates
+          path: code/peak_certificates.json
+          if-no-files-found: error
